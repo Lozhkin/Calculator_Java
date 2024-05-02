@@ -14,13 +14,14 @@ public class Main {
 
     public static String calc(String input) throws Exception {
         String[] expression = input.split(" ");
+        if (expression.length > 3) throw new Exception("Более трех операндов в вашем примере");
         int[] operands = operand(expression);
         int operand1 = operands[0];
         int operand2 = operands[1];
         char operator = expression[1].charAt(0);
         int result = calculationResult(operator, operand1, operand2);
 
-        String output = "";
+        String output;
         if (isRoman) {
             output = processing(result);
         } else output = "" + result;
@@ -40,36 +41,24 @@ public class Main {
             {
                 int d = result / vals[count];
                 result = result % vals[count];
-                for(int i=0; i<d; i++)
-                    romanResult.append(romNum[count]);
+                romanResult.append(romNum[count].repeat(d));
             }
             count++;
         }
 
-        if (romanResult.toString().isEmpty()) throw new Exception();
+        if (romanResult.toString().isEmpty()) throw new Exception("");
 
         return romanResult.toString();
     }
 
     private static int calculationResult(char operator, int operand1, int operand2) throws Exception {
-        int output = 0;
-        switch (operator) {
-            case '+':
-                output = operand1 + operand2;
-                break;
-            case '-':
-                output = operand1 - operand2;
-                break;
-            case '*':
-                output = operand1 * operand2;
-                break;
-            case '/':
-                output = operand1 / operand2;
-                break;
-            default:
-                throw new Exception();
-        }
-        return output;
+        return switch (operator) {
+            case '+' -> operand1 + operand2;
+            case '-' -> operand1 - operand2;
+            case '*' -> operand1 * operand2;
+            case '/' -> operand1 / operand2;
+            default -> throw new Exception();
+        };
     }
 
     private static int[] operand(String[] s) {
@@ -84,7 +73,6 @@ public class Main {
             isRoman = true;
             RomanNumeral rom1 = RomanNumeral.valueOf(s[0]);
             RomanNumeral rom2 = RomanNumeral.valueOf(s[2]);
-            ;
             return new int[] {rom1.getArabicNumeral(), rom2.getArabicNumeral()};
         }
 
